@@ -12,17 +12,18 @@ def main():
 
     print("Hello, This is study timer.\nPlease enter 'return' to start, or any key to stop!\n")
 
+    # Start to loop
     while True:
-        
+
         # Timer start
-        userInput = input("Do you want to start? ")
+        userInput = input(">>> Do you want to start? ")
         if userInput == "":
             state = True
             begin_time = datetime.now()
             begin_time_str = begin_time.strftime("%H:%M:%S")
 
             # write to file
-            print("(%s) Begin..."%(begin_time_str),end=" ")
+            print("(%s) Begin......"%(begin_time_str),end=" ")
             file.write(">>> %s \n"%(begin_time_str))
         else:
             break
@@ -44,7 +45,8 @@ def main():
             break
 
     # summary
-    if state: # still open
+    # if state is still on, need to calculate the final total time
+    if state: 
         # do the rest 
         end_time = datetime.now()
         end_time_str = end_time.strftime("%H:%M:%S")
@@ -55,10 +57,9 @@ def main():
 
         total_time += ( end_time - begin_time )
 
-    file.write("==========\n")
+    # summary
+    file.write("==========\nTotal_time: ")
     file.write(str(total_time)[0:-7] + '\n')
-
-
     file.close()
     
 if __name__ == "__main__":
