@@ -1,71 +1,66 @@
 #!/opt/homebrew/Caskroom/miniforge/base/envs/myenv/bin/python
 from datetime import datetime, timedelta
+from turtle import st
 
-from pynput import keyboard 
 
-def on_press(key):
-    global STATE
-    global study_time
-    global begin_time
+def main():
+    # initial
+    state = False
+    total_time = timedelta()
+    today_file = datetime.now().strftime("%Y-%b-%d")
+    file = open('%s.txt'%(today_file), 'a+')
 
-    # get key
-    try:
-        k = key.char
-    except:
-        k = key.name
+    print("Hello, This is study timer.\nPlease enter 'return' to start, or any key to stop!\n")
 
-    # make up today file
-    today = datetime.now().strftime("%Y-%b-%d")
-
-    if k == "enter":
-        with open(today+'.txt', 'a+') as f:
-            # Get now
-            time_now = datetime.now()
-            now = time_now.strftime("%H:%M:%S")
-            
-            if not STATE:
-                flag = '>>> '
-                print("(%s) Begin..."%(now))
-                STATE = True
-                begin_time = time_now
-            else:
-                flag = ''
-                print("(%s) End!"%(now))
-                STATE = False
-                # calculate total time
-                study_time += (time_now - begin_time)
-
-            # Write to file
-            f.write(flag + now+'\n')
-    
-    # stop the listener
-    if key == keyboard.Key.esc:
-        print("Close the timer now")
+    while True:
         
-        with open(today+'.txt', 'a+') as f:
-            if not STATE: # If the task is done, save it
-                f.write("==================\n")
-                f.write("Total study time: \n"+ str(study_time))
-            else: # Make sure task is done
-                # Get end time
-                time_now = datetime.now()
-                now = time_now.strftime("%H:%M:%S")
-                f.write("" + now+'\n')
-                study_time += (time_now - begin_time)
-                f.write("==================\n")
-                f.write("Total study time: \n"+ str(study_time))
-                
+        # Timer start
+        userInput = input("Do you want to start? ")
+        if userInput == "":
+            state = True
+            begin_time = datetime.now()
+            begin_time_str = begin_time.strftime("%H:%M:%S")
 
-        return False
+            # write to file
+            print("(%s) Begin..."%(begin_time_str),end=" ")
+            file.write(">>> %s \n"%(begin_time_str))
+        else:
+            break
 
-if __name__ == "__main__":
+        # Time end
+        userInput = input()
+        if userInput == "":
+            
+            state = False
+            end_time = datetime.now()
+            end_time_str = end_time.strftime("%H:%M:%S")
 
-    # inital 
-    STATE = False
-    study_time = timedelta()
-    listener = keyboard.Listener(on_press=on_press)
+            # write to file
+            print("(%s) End!\n"%(end_time_str))
+            file.write( "%s\n"%(end_time_str))
+
+            total_time += ( end_time - begin_time )
+        else:
+            break
+
+    # summary
+    if state: # still open
+        # do the rest 
+        end_time = datetime.now()
+        end_time_str = end_time.strftime("%H:%M:%S")
+
+        # write to file
+        print("(%s) End!"%(end_time_str))
+        file.write( "%s\n"%(end_time_str))
+
+        total_time += ( end_time - begin_time )
+
+    file.write("==========\n")
+    file.write(str(total_time)[0:-7] + '\n')
+
+
+    file.close()
     
-    # start
-    listener.start()
-    listener.join() # remove
+if __name__ == "__main__":
+    main()
 
