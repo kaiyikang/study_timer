@@ -38,7 +38,7 @@ def main():
 
             # write to file
             print("(%s) End!\n"%(end_time_str))
-            file.write( "%s\n"%(end_time_str))
+            file.write( "<<< %s\n"%(end_time_str))
 
             total_time += ( end_time - begin_time )
         else:
@@ -58,7 +58,7 @@ def main():
         total_time += ( end_time - begin_time )
 
     # summary
-    file.write("==========\nTotal_time: ")
+    file.write("==========\nTotal_time:")
     file.write(str(total_time)[0:-7] + '\n')
     file.close()
     
