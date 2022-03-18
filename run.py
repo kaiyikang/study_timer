@@ -30,7 +30,7 @@ def on_press(key):
                 begin_time = time_now
             else:
                 flag = ''
-                print("(%s)End!"%(now))
+                print("(%s) End!"%(now))
                 STATE = False
                 # calculate total time
                 study_time += (time_now - begin_time)
@@ -50,7 +50,6 @@ def on_press(key):
                 # Get end time
                 time_now = datetime.now()
                 now = time_now.strftime("%H:%M:%S")
-                print("End!")
                 f.write("" + now+'\n')
                 study_time += (time_now - begin_time)
                 f.write("==================\n")
